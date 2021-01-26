@@ -1,43 +1,44 @@
 // from data.js
 var tableData = data;
 
+// Global Variables
+var keys = ["datetime", "city", "state", "country", "shape", "durationMinutes", "comments"]
+
 //use d3 to select table body
 var tbody = d3.select("tbody");
 
-// Console.log the weather data from data.js
+// Console.log the ufo data.js
 console.log(data);
 
-//Loop Through `data` and console.log each ufo sighting
-data.forEach(function(tableData) {
-    console.log(tableData);
-});
-
-//Use d3 to append one table row `tr` for each ufo sighting
-    data.forEach(function(tableData) {
-    console.log(tableData);
-    var row = tbody.append("tr");
+function populate(inputData){
+    inputData.forEach(sighting => {
+        var row = tbody.append("tr");
+        keys.forEach(key => row.append("td").text(sighting[key]));
     });
+};
+populate(tableData);
 
-//    Use `Object.entries` to console.log each ufo sighting
-    data.forEach(function(tableData) {
-    console.log(tableData);
-    var row = tbody.append("tr");
-    });
+//Declare button
+var button = d3.select("#filter-btn");
+//Declare form
+var form = d3.select("#datetime");
+
+//Create event handlers
+button.on("click",runSearch);
+form.on("submit",runSearch);
+
+// This function is triggered when the button is clicked
+function runSearch() {
+    //Prevent the page from refreshing
+    d3.event.preventDefault();
+
+    //Select the input element and get the raw HTML node
+    var inputElement = d3.select("#datetime");
+    console.log("runSearch: " + inputValue);
     
-    Object.entries(table.Data).forEach(function([key, value]) {
-    console.log(key, value);
-    });
-
-//Use d3 to update each cell's text with
-//new report values (date/time, city, state, country, shape, comment)
-data.forEach(function(tableData) {
-    console.log(tableData);
-    var row = tbody.append("tr");
-    Object.entries(tableData).forEach(function([key, value]) {
-     console.log(key, value);
-     // Append a cell to the row for each value
-     // in the ufo report object
-     var cell = row.append("td");
-     cell.text(value);
-    });
-});
+    //Get the value property of the input element
+    var inputValue = inputElement.property("value");
+    var filteredData = tableData.filter(data => data.datetime === inputValue);
+    tbody.html("");
+    populate(filteredData);
+};
